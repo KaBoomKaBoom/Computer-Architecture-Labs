@@ -1,4 +1,4 @@
-global _start       ; make the label _start visible externally
+global main       ; make the label _start visible externally
  
 extern WriteFile        ; include the WriteFile function
 extern GetStdHandle     ; include the GetStdHandle function
@@ -7,7 +7,7 @@ section .data   ; data section
 message: db "Hello! This is my first program!",10  ; string to output to console
  
 section .text       ; code section declaration
-_start:             ; _start label - entry point of the program
+main:             ; _start label - entry point of the program
     sub  rsp, 40   ; Allocate space on the stack for function parameters (40 bytes)
     mov  rcx, -11  ; Set the argument for GetStdHandle to STD_OUTPUT (-11)
     call GetStdHandle ; Call the GetStdHandle function to obtain a handle to the standard output
