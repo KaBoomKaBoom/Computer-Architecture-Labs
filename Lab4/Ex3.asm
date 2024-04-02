@@ -1,86 +1,92 @@
-    SYS_EXIT  equ 1
-    SYS_READ  equ 3
-    SYS_WRITE equ 4
-    STDIN     equ 0
-    STDOUT    equ 1
+; Define system call numbers
+SYS_EXIT  equ 1
+SYS_READ  equ 3
+SYS_WRITE equ 4
+STDIN     equ 0
+STDOUT    equ 1
 
-segment .data 
+section .data 
+    ; Define message to prompt user to enter a digit
+    msg db "Enter a digit ", 0xA,0xD   ; Newline and carriage return characters
+    len equ $- msg                      ; Calculate length of message
 
-    msg db "Enter a digit ", 0xA,0xD 
-    len equ $- msg 
+section .bss
+    ; Reserve space for variables
+    number1 resb 2                      ; Reserve space for the first number
+    number2 resb 2                      ; Reserve space for the second number
+    result resb 1                       ; Reserve space for the result
 
-segment .bss
-
-    number1 resb 2 
-    number2 resb 2 
-    result resb 1    
-
-segment .text 
-
+section .text 
+    ; Define another message to prompt user to enter second digit
     msg2 db "Enter second digit", 0xA,0xD 
     len2 equ $- msg2 
 
+    ; Define message for displaying the sum
     msg3 db "The sum is: "
     len3 equ $- msg3
 
 global _start 
 
- _start: 
+_start: 
+    ; Prompt user to enter the first digit
+    mov eax, SYS_WRITE         ; System call to write
+    mov ebx, STDOUT            ; File descriptor for standard output
+    mov ecx, msg               ; Address of the message
+    mov edx, len               ; Length of the message
+    int 0x80                   ; Invoke the system call
 
-    mov eax, SYS_WRITE         
-    mov ebx, STDOUT         
-    mov ecx, msg         
-    mov edx, len 
-    int 0x80                
+    ; Read the first digit entered by the user
+    mov eax, SYS_READ          ; System call to read
+    mov ebx, STDIN             ; File descriptor for standard input
+    mov ecx, number1           ; Address to store the input
+    mov edx, 2                 ; Number of bytes to read
+    int 0x80                   ; Invoke the system call
 
-    mov eax, SYS_READ 
-    mov ebx, STDIN  
-    mov ecx, number1 
-    mov edx, 2
-    int 0x80            
+    ; Prompt user to enter the second digit
+    mov eax, SYS_WRITE         ; System call to write
+    mov ebx, STDOUT            ; File descriptor for standard output
+    mov ecx, msg2              ; Address of the message
+    mov edx, len2              ; Length of the message
+    int 0x80                   ; Invoke the system call
 
-    mov eax, SYS_WRITE        
-    mov ebx, STDOUT         
-    mov ecx, msg2          
-    mov edx, len2         
-    int 0x80
+    ; Read the second digit entered by the user
+    mov eax, SYS_READ          ; System call to read
+    mov ebx, STDIN             ; File descriptor for standard input
+    mov ecx, number2           ; Address to store the input
+    mov edx, 2                 ; Number of bytes to read
+    int 0x80                   ; Invoke the system call
 
-    mov eax, SYS_READ  
-    mov ebx, STDIN  
-    mov ecx, number2 
-    mov edx, 2
-    int 0x80        
+    ; Display message indicating sum calculation
+    mov eax, SYS_WRITE         ; System call to write
+    mov ebx, STDOUT            ; File descriptor for standard output
+    mov ecx, msg3              ; Address of the message
+    mov edx, len3              ; Length of the message
+    int 0x80                   ; Invoke the system call
 
-    mov eax, SYS_WRITE         
-    mov ebx, STDOUT         
-    mov ecx, msg3          
-    mov edx, len3         
-    int 0x80
-
-    ; load number1 into eax and subtract '0' to convert from ASCII to decimal
+    ; Load number1 into eax and subtract '0' to convert from ASCII to decimal
     mov eax, [number1]
     sub eax, '0'
-    ; do the same for number2
+    ; Do the same for number2
     mov ebx, [number2]
     sub ebx, '0'
 
-    ; add eax and ebx, storing the result in eax
+    ; Add eax and ebx, storing the result in eax
     add eax, ebx
-    ; add '0' to eax to convert the digit from decimal to ASCII
+    ; Add '0' to eax to convert the digit from decimal to ASCII
     add eax, '0'
 
-    ; store the result in result
+    ; Store the result in result
     mov [result], eax
 
-    ; print the result digit
-    mov eax, SYS_WRITE        
-    mov ebx, STDOUT
-    mov ecx, result         
-    mov edx, 1        
-    int 0x80
-
+    ; Print the result digit
+    mov eax, SYS_WRITE         ; System call to write
+    mov ebx, STDOUT            ; File descriptor for standard output
+    mov ecx, result            ; Address of the result
+    mov edx, 1                 ; Length of the result
+    int 0x80                   ; Invoke the system call
 
 exit:    
-    mov eax, SYS_EXIT   
-    xor ebx, ebx 
-    int 0x80
+    ; Exit the program
+    mov eax, SYS_EXIT          ; System call to exit
+    xor ebx, ebx               ; Exit code 0
+    int 0x80                   ; Invoke the system call
