@@ -1,3 +1,5 @@
+;invert string
+
 section .data
     msg times 64 db 0 
     max equ 64

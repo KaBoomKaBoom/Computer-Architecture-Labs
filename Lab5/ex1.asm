@@ -1,3 +1,5 @@
+;string comparison in assembly language
+
 section .bss
     str1 resb 256    ; Allocate space for string 1
     str2 resb 256    ; Allocate space for string 2

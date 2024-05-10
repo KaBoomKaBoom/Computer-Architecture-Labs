@@ -1,5 +1,3 @@
-2+, 9+, 19+, 28+, 30+, 32+, 34, 39, 41, 43, 54 
-
 ;decimal to hexadecimal
 
 section .data
@@ -134,16 +132,17 @@ reverse_string:
     dec rcx                 ; Decrement the counter to point to the last character
     mov rdx, rcx            ; Copy the counter to RDX (number of characters)
     shr rdx, 1              ; Divide RDX by 2 to get the number of iterations
-    xor rsi, rsi            ; Reset RSI to the beginning of the string
+    xor rcx, rcx            ; Reset RCX to the beginning of the string
 .reverse_loop:
-    cmp rsi, rdx            ; Check if we've reached the middle of the string
+    cmp rcx, rdx            ; Check if we've reached the middle of the string
     jae .done               ; If yes, we are done
-    mov al, [rdi+rsi]       ; Swap characters
-    mov dl, [rdi+rcx]
-    mov [rdi+rcx], al
-    mov [rdi+rsi], dl
-    inc rsi                 ; Move to the next character from the beginning
-    dec rcx                 ; Move to the previous character from the end
+    mov al, [rdi+rcx]       ; Swap characters
+    mov r8, rdx             ; Use R8 as a temporary register
+    sub r8, rcx
+    mov dl, [rdi+r8]
+    mov [rdi+r8], al
+    mov [rdi+rcx], dl
+    inc rcx                 ; Move to the next character from the beginning
     jmp .reverse_loop       ; Continue reversing
 .done:
     ret                     ; Return

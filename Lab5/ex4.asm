@@ -1,88 +1,70 @@
-section .data
-    fmt_input db "%d", 0             ; Format string for input of the first long long integer
-    fmt_input2 db "%d", 0            ; Format string for input of the second long long integer
-    fmt db "%d", 0                    ; Format string for printing a long long integer
-    divide_by_zero_error db "Error: Division by zero", 0
-    conversion_error_msg db "Error: Conversion failed", 0
+;string to int conversion
 
 section .bss
-    num1 resq 1                         ; Reserve space for the first integer
-    num2 resq 1                         ; Reserve space for the second integer
-    input1 resb 20                      ; Reserve space for input string 1
-    input2 resb 20                      ; Reserve space for input string 2
+    input_buffer resb 256     ; Buffer to store user input
 
+section .data
+    input_prompt db "Enter the string to convert: ", 0  ; Prompt string
+    format_int db "Coverted integer: %ld", 10   ; Format string for printing integer
 section .text
-    extern printf, scanf, atoi, exit    ; Declare external C functions
+    global _start
 
-global _start
 _start:
-    ; Prompt for input of the first integer
-    mov     rdi, fmt_input
-    mov     rsi, input1                 ; Address of input string 1
-    call    scanf                       ; Call scanf to read the first integer from stdin
 
-    ; Check for conversion errors
-    mov     rdi, input1
-    call    atoi
-    test    rax, rax                    ; Check if conversion was successful
-    js      conversion_error            ; Jump to conversion error if sign flag is set
-    ; Print the first converted number
-    mov     rdi, fmt
-    mov     rsi, rax                 ; Load the converted number from memory
-    call    printf                      ; Print the converted number
-    mov     [num1], rax                 ; Store the converted integer back
+    ; Display prompt message
+    mov rax, 1                  ; syscall number for sys_write
+    mov rdi, 1                  ; file descriptor 1 (stdout)
+    mov rsi, input_prompt             ; pointer to the prompt message
+    mov rdx, 30                 ; length of the prompt message
+    syscall                     ; invoke the system call
 
+    ; Read user input
+    mov rax, 0                 ; sys_read syscall number
+    mov rdi, 0                 ; stdin file descriptor
+    mov rsi, input_buffer      ; Address of the input buffer
+    mov rdx, 256               ; Maximum number of bytes to read
+    syscall
 
-    ; Prompt for input of the second integer
-    mov     rdi, fmt_input2
-    mov     rsi, input2                 ; Address of input string 2
-    call    scanf                       ; Call scanf to read the second integer from stdin
+    ; Call atoi function to convert input string to integer
+    mov rdi, input_buffer   ; Pass the address of input string
+    call atoi               ; Call the atoi function
 
-    ; Check for conversion errors
-    mov     rdi, input2
-    call    atoi
-    test    rax, rax                    ; Check if conversion was successful
-    js      conversion_error            ; Jump to conversion error if sign flag is set
-    mov     [num2], rax                 ; Store the converted integer back
-
-    ; Print the second converted number
-    mov     rdi, fmt
-    mov     rsi, [num2]                 ; Load the converted number from memory
-    call    printf                      ; Print the converted number
-
-    ; Check for division by zero
-    cmp     qword [num2], 0             ; Compare num2 with zero
-    je      division_error              ; If zero, jump to division error
-
-    ; Divide num1 by num2
-    mov     rax, [num1]
-    mov     rbx, [num2]
-    cqo
-    div     rbx
-
-    ; Print the result of division
-    mov     rdi, fmt
-    mov     rsi, rax
-    call    printf                      ; Print the result of division
+    ; Print the converted integer
+    mov rsi, rax            ; Pass the integer to be printed
+    mov rdi, format_int     ; Pass the format string for printing integer
+    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
+    call printf             ; Call printf function
 
     ; Exit the program
-    mov     eax, 0                      ; System call number for exit
-    call    exit                        ; Invoke exit to terminate the program
+    mov eax, 60             ; syscall number for sys_exit
+    xor edi, edi            ; exit status 0
+    syscall
 
-division_error:
-    ; Print division by zero error message
-    mov     rdi, divide_by_zero_error
-    call    printf
+section .text
+extern printf
 
-    ; Exit the program with error
-    mov     eax, 1                      ; System call number for exit
-    call    exit                        ; Invoke exit to terminate the program
+global atoi
+    
+atoi:
+    mov rax, 0              ; Set initial total to 0
+     
+convert:
+    movzx rsi, byte [rdi]   ; Get the current character
+    test rsi, rsi           ; Check for \0
+    je done
+    
+    cmp rsi, 48             ; Anything less than 0 is invalid
+    jl done
+    
+    cmp rsi, 57             ; Anything greater than 9 is invalid
+    jg done
+     
+    sub rsi, 48             ; Convert from ASCII to decimal 
+    imul rax, 10            ; Multiply total by 10
+    add rax, rsi            ; Add current digit to total
+    
+    inc rdi                 ; Get the address of the next character
+    jmp convert
 
-conversion_error:
-    ; Print conversion error message
-    mov     rdi, conversion_error_msg
-    call    printf
-
-    ; Exit the program with error
-    mov     eax, 1                      ; System call number for exit
-    call    exit                        ; Invoke exit to terminate the program
+done:
+    ret                     ; Return total

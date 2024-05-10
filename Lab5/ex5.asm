@@ -1,5 +1,3 @@
-;substraction 2 positive numbers
-
 section .data
     ; Messages
     msg1 db 'Enter the first number: ', 0
@@ -15,6 +13,7 @@ section .data
     lnlinea equ $ - nlinea
 
     format_int db "Result: %ld", 10   ; Format string for printing integer
+
 section .bss
     num1 resb 8
     num2 resb 8
@@ -33,10 +32,10 @@ _start:
     mov rdx, lmsg1
     syscall
 
-    ; Read user input
+    ; Read user input for first number
     mov rax, 0                 ; sys_read syscall number
     mov rdi, 0                 ; stdin file descriptor
-    mov rsi, input1      ; Address of the input buffer
+    mov rsi, input1            ; Address of the input buffer
     mov rdx, 256               ; Maximum number of bytes to read
     syscall
 
@@ -47,33 +46,41 @@ _start:
     mov rdx, lmsg2
     syscall
 
-    ; Read user input
+    ; Read user input for second number
     mov rax, 0                 ; sys_read syscall number
     mov rdi, 0                 ; stdin file descriptor
-    mov rsi, input2      ; Address of the input buffer
+    mov rsi, input2            ; Address of the input buffer
     mov rdx, 256               ; Maximum number of bytes to read
     syscall
 
-    ; Call atoi function to convert input string to integer
-    mov rdi, input1   ; Pass the address of input string
-    call atoi               ; Call the atoi function
-    mov [num1], rax        ; Store the result in num1
+    ; Call atoi function to convert input strings to integers
+    mov rdi, input1            ; Pass the address of the first input string
+    call atoi                  ; Call the atoi function
+    mov [num1], rax            ; Store the result in num1
 
-    ; Call atoi function to convert input string to integer
-    mov rdi, input2   ; Pass the address of input string
-    call atoi               ; Call the atoi function
-    mov [num2], rax        ; Store the result in num1
+    mov rdi, input2            ; Pass the address of the second input string
+    call atoi                  ; Call the atoi function
+    mov [num2], rax            ; Store the result in num2
 
-    ; Subtract second number from the first
-    mov rax, [num1]
-    sub rax, [num2]
-    mov [result], rax
+    ; Divide first number by the second
+    mov rax, [num1]            ; Load the first number
+    mov rbx, [num2]            ; Load the second number
+    xor rdx, rdx               ; Clear RDX for the division operation
+    idiv rbx                   ; Divide RDX:RAX by the second number (RBX)
+    mov [result], rax          ; Store the result in result
 
-    ; Print the converted integer
-    mov rsi, [result]            ; Pass the integer to be printed
-    mov rdi, format_int     ; Pass the format string for printing integer
-    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
-    call printf             ; Call printf function
+
+    mov rsi, [result]          ; Pass the integer to be printed
+    mov rdi, format_int        ; Pass the format string for printing integer
+    xor rax, rax               ; Clear RAX register for syscall number (sys_write)
+    call printf                ; Call printf function
+
+    ; Print newline
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, nlinea
+    mov rdx, lnlinea
+    syscall
 
     ; Exit
     mov rax, 60
