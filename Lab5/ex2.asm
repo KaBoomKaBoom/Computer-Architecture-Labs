@@ -4,12 +4,14 @@ section .data
     msg times 64 db 0 
     max equ 64
     prompt_msg db 'Enter string: ', 0
+        nlinea db 10, 0
+    lnlinea equ $ - nlinea
     
-
+  
 section .text
-    global _start
+    global ex2
 
-_start:
+ex2:
     ; Prompt user to enter string 1
     mov rax, 1
     mov rdi, 1
@@ -49,7 +51,11 @@ _start:
     mov rax,1 ; syscall
     syscall
 
-    ; Exit
-    mov rdi,0 ; exit code
-    mov rax,60 ; syscall
+        ; Print newline
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, nlinea
+    mov rdx, lnlinea
     syscall
+
+ret

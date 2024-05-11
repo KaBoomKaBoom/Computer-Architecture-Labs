@@ -8,13 +8,10 @@ section .data
     msg2 db 'Enter the second number: ', 0
     lmsg2 equ $ - msg2
 
-    msg3 db 'Result: ', 0
-    lmsg3 equ $ - msg3
-
     nlinea db 10, 0
     lnlinea equ $ - nlinea
 
-    format_int db "Result: %ld", 10   ; Format string for printing integer
+    format_int db "Result: %ld", 10, 0   ; Format string for printing integer
 section .bss
     num1 resb 8
     num2 resb 8
@@ -23,9 +20,11 @@ section .bss
     input2 resb 256     ; Buffer to store user input
 
 section .text
-    global _start
+global ex3
+extern printf
+global atoi
 
-_start:
+ex3:
     ; Print message 1
     mov rax, 1
     mov rdi, 1
@@ -70,19 +69,14 @@ _start:
     mov [result], rax
 
     ; Print the converted integer
-    mov rsi, [result]            ; Pass the integer to be printed
     mov rdi, format_int     ; Pass the format string for printing integer
+    mov rsi, [result]            ; Pass the integer to be printed
     xor rax, rax            ; Clear RAX register for syscall number (sys_write)
     call printf             ; Call printf function
 
-    ; Exit
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+ret
 
-section .text
-extern printf
-global atoi
+
     
 atoi:
     mov rax, 0              ; Set initial total to 0

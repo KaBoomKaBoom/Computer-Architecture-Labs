@@ -15,9 +15,9 @@ section .bss
     input resb 256     ; Buffer to store user input
 
 section .text
-    global _start
+    global ex10
 
-_start:
+ex10:
     ; Print message 1
     mov rax, 1
     mov rdi, 1
@@ -63,10 +63,7 @@ generate_string:
     mov rdx, lnlinea
     syscall
 
-    ; Exit
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+ret
 
 atoi:
     xor rax, rax                ; Set initial total to 0

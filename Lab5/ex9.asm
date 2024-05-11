@@ -25,9 +25,9 @@ section .bss
     input2 resb 256     ; Buffer to store user input
 
 section .text
-    global _start
+    global ex9
 
-_start:
+ex9:
     ; Print message 1
     mov rax, 1
     mov rdi, 1
@@ -77,10 +77,7 @@ _start:
     mov rax, 1
     call printf
 
-    ; Exit
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+ret
 
 section .text
 extern printf

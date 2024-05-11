@@ -9,7 +9,7 @@ section .data
 section .text
     global _start
 
-_start:
+ex4:
 
     ; Display prompt message
     mov rax, 1                  ; syscall number for sys_write
@@ -25,9 +25,9 @@ _start:
     mov rdx, 256               ; Maximum number of bytes to read
     syscall
 
-    ; Call atoi function to convert input string to integer
+    ; Call atoi1 function to convert input string to integer
     mov rdi, input_buffer   ; Pass the address of input string
-    call atoi               ; Call the atoi function
+    call atoi1               ; Call the atoi1 function
 
     ; Print the converted integer
     mov rsi, rax            ; Pass the integer to be printed
@@ -35,17 +35,15 @@ _start:
     xor rax, rax            ; Clear RAX register for syscall number (sys_write)
     call printf             ; Call printf function
 
-    ; Exit the program
-    mov eax, 60             ; syscall number for sys_exit
-    xor edi, edi            ; exit status 0
-    syscall
+ret
 
 section .text
 extern printf
 
-global atoi
+global atoi1
+global ex4
     
-atoi:
+atoi1:
     mov rax, 0              ; Set initial total to 0
      
 convert:

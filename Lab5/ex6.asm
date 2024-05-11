@@ -19,9 +19,9 @@ section .bss
     input resb 256     ; Buffer to store user input
 
 section .text
-    global _start
+    global ex6
 
-_start:
+ex6:
     ; Print message 1
     mov rax, 1
     mov rdi, 1
@@ -36,9 +36,9 @@ _start:
     mov rdx, 256               ; Maximum number of bytes to read
     syscall
 
-    ; Call atoi function to convert input string to integer
+    ; Call atoi3 function to convert input string to integer
     mov rdi, input             ; Pass the address of input string
-    call atoi                  ; Call the atoi function
+    call atoi3                  ; Call the atoi3 function
     mov [num], rax             ; Store the result in num
 
     ; Calculate factorial
@@ -62,16 +62,13 @@ mov rsi, nlinea
 mov rdx, lnlinea
 syscall
 
-    ; Exit
-mov rax, 60
-xor rdi, rdi
-syscall
+ret
 
 section .text
 extern printf
-global atoi
+global atoi3
     
-atoi:
+atoi3:
     mov rax, 0              ; Set initial total to 0
      
 convert:

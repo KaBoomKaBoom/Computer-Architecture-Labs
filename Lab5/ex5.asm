@@ -22,9 +22,9 @@ section .bss
     input2 resb 256     ; Buffer to store user input
 
 section .text
-    global _start
+    global ex5
 
-_start:
+ex5:
     ; Print message 1
     mov rax, 1
     mov rdi, 1
@@ -53,13 +53,13 @@ _start:
     mov rdx, 256               ; Maximum number of bytes to read
     syscall
 
-    ; Call atoi function to convert input strings to integers
+    ; Call atoi2 function to convert input strings to integers
     mov rdi, input1            ; Pass the address of the first input string
-    call atoi                  ; Call the atoi function
+    call atoi2                  ; Call the atoi2 function
     mov [num1], rax            ; Store the result in num1
 
     mov rdi, input2            ; Pass the address of the second input string
-    call atoi                  ; Call the atoi function
+    call atoi2                  ; Call the atoi2 function
     mov [num2], rax            ; Store the result in num2
 
     ; Divide first number by the second
@@ -81,17 +81,13 @@ _start:
     mov rsi, nlinea
     mov rdx, lnlinea
     syscall
-
-    ; Exit
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+ret
 
 section .text
 extern printf
-global atoi
+global atoi2
     
-atoi:
+atoi2:
     mov rax, 0              ; Set initial total to 0
      
 convert:

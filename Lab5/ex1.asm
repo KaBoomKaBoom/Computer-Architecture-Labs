@@ -5,14 +5,15 @@ section .bss
     str2 resb 256    ; Allocate space for string 2
 
 section .data
-    equal_msg db 'Strings are equal', 0
-    not_equal_msg db 'Strings are not equal', 0
+    equal_msg db 'Strings are equal', 10
+    not_equal_msg db 'Strings are not equal', 10
     prompt_msg db 'Enter string: ', 0
 
 section .text
-    global _start
+    global ex1
 
-_start:
+
+ex1:
     ; Prompt user to enter string 1
     mov rax, 1
     mov rdi, 1
@@ -46,10 +47,8 @@ _start:
     mov rdi, str2    ; Address of second string
     call compare_strings
 
-    ; Exit program
-    mov eax, 60         ; syscall number for sys_exit
-    xor edi, edi        ; Exit code 0
-    syscall
+    ret
+
 
 compare_strings:
     compare_loop:
@@ -74,7 +73,7 @@ compare_strings:
         mov rax, 1      ; syscall number for sys_write
         mov rdi, 1      ; file descriptor 1 (stdout)
         mov rsi, equal_msg  ; pointer to the string
-        mov rdx, 30     ; length of the string
+        mov rdx, 18     ; length of the string
         syscall         ; invoke the system call
         ret
 
@@ -82,6 +81,6 @@ compare_strings:
         mov rax, 1      ; syscall number for sys_write
         mov rdi, 1      ; file descriptor 1 (stdout)
         mov rsi, not_equal_msg  ; pointer to the string
-        mov rdx, 30    ; length of the string
+        mov rdx, 22    ; length of the string
         syscall         ; invoke the system call
         ret

@@ -6,10 +6,10 @@ section .data
     format db "Lower case: ", 0 ; Format string for printing integer (newline added)
     prompt_msg db 'Enter string: ', 0 ; Prompt message for user input
 section .text
-    global _start
+    global ex7
     extern printf
 
-_start:
+ex7:
 
     ; Prompt user to enter string
     mov rax, 1
@@ -38,10 +38,7 @@ _start:
     mov rdi, output_string
     call printf
 
-    ; Exit the program
-    mov rax, 60         ; syscall number for exit
-    xor rdi, rdi        ; exit code 0
-    syscall
+ret
 
 to_lowercase:
     ; Loop through each character of the string until null terminator

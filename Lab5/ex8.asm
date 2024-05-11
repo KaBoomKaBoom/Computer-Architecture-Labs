@@ -23,9 +23,9 @@ section .bss
     input2 resb 256     ; Buffer to store user input
 
 section .text
-    global _start
+    global ex8
 
-_start:
+ex8:
     ; Print message 1
     mov rax, 1
     mov rdi, 1
@@ -54,14 +54,14 @@ _start:
     mov rdx, 256               ; Maximum number of bytes to read
     syscall
 
-    ; Call atoi function to convert input string to integer
+    ; Call atoi4 function to convert input string to integer
     mov rdi, input1   ; Pass the address of input string
-    call atoi               ; Call the atoi function
+    call atoi4               ; Call the atoi4 function
     mov [num1], rax        ; Store the result in num1
 
-    ; Call atoi function to convert input string to integer
+    ; Call atoi4 function to convert input string to integer
     mov rdi, input2   ; Pass the address of input string
-    call atoi               ; Call the atoi function
+    call atoi4               ; Call the atoi4 function
     mov [num2], rax        ; Store the result in num1
 
     ; Compare the numbers
@@ -85,15 +85,13 @@ print_result:
     call printf             ; Call printf function
 
     ; Exit
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+ret
 
 section .text
 extern printf
-global atoi
+global atoi4
     
-atoi:
+atoi4:
     mov rax, 0              ; Set initial total to 0
      
 convert:
