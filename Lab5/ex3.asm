@@ -1,5 +1,3 @@
-;substraction 2 positive numbers
-
 section .data
     ; Messages
     msg1 db 'Enter the first number: ', 0
@@ -11,7 +9,8 @@ section .data
     nlinea db 10, 0
     lnlinea equ $ - nlinea
 
-    format_int db "Result: %ld", 10, 0   ; Format string for printing integer
+
+
 section .bss
     num1 resb 8
     num2 resb 8
@@ -68,16 +67,10 @@ ex3:
     sub rax, [num2]
     mov [result], rax
 
-    ; Print the converted integer
-    mov rdi, format_int     ; Pass the format string for printing integer
-    mov rsi, [result]            ; Pass the integer to be printed
-    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
-    call printf             ; Call printf function
+    ; Return the result to main
+    mov rax, [result]
+    ret
 
-ret
-
-
-    
 atoi:
     mov rax, 0              ; Set initial total to 0
      

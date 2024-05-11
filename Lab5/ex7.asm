@@ -3,8 +3,9 @@
 section .data
     input_string resb 255 ; Input string to be converted to lowercase
     output_string resb 255 ; Reserve space for the output string
-    format db "Lower case: ", 0 ; Format string for printing integer (newline added)
     prompt_msg db 'Enter string: ', 0 ; Prompt message for user input
+    format_str db "Lower case: ", 0   ; Format string for printing string
+
 section .text
     global ex7
     extern printf
@@ -15,7 +16,7 @@ ex7:
     mov rax, 1
     mov rdi, 1
     mov rsi, prompt_msg
-    mov rdx, 16
+    mov rdx, 14
     syscall
 
     ; Read input string
@@ -30,15 +31,21 @@ ex7:
     mov rsi, output_string
     call to_lowercase
 
-    ; Print formatted message
-    mov rdi, format
-    call printf
+    
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, format_str
+    mov rdx, 12
+    syscall
 
-    ; Print the lowercase string
-    mov rdi, output_string
-    call printf
 
-ret
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, output_string
+    mov rdx, 255
+    syscall
+
+    ret
 
 to_lowercase:
     ; Loop through each character of the string until null terminator

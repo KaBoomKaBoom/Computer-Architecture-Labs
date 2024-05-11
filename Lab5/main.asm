@@ -15,6 +15,9 @@ section .data
     choice db 0, 0, 0, 0, 0 ; 4 bytes for input and 1 byte for null-terminator
     num dq 0
 
+    format_int db "Result: %ld", 10, 0   ; Format string for printing integer
+    format_float db "Result: %f", 10   ; Format string for printing floating point number
+
 section .text
     global main
     extern ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10, atoi,printf
@@ -90,18 +93,37 @@ call_ex2:
 
 call_ex3:
     call ex3
+    ; Print the converted integer
+    mov rdi, format_int     ; Pass the format string for printing integer
+    mov rsi, rax            ; Pass the integer to be printed
+    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
+    call printf             ; Call printf function
     jmp main 
 
 call_ex4:
     call ex4
+        ; Print the converted integer
+    mov rdi, format_int     ; Pass the format string for printing integer
+    mov rsi, rax            ; Pass the integer to be printed
+    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
+    call printf             ; Call printf function
     jmp main
 
 call_ex5:
     call ex5
+    mov rdi, format_int        ; Pass the format string for printing integer
+    mov rsi, rax            ; Pass the integer to be printed
+    xor rax, rax               ; Clear RAX register for syscall number (sys_write)
+    call printf                ; Call printf function
+
     jmp main
 
 call_ex6:
     call ex6
+    mov rdi, format_int        ; Pass the format string for printing integer
+    mov rsi, rax            ; Pass the integer to be printed
+    xor rax, rax               ; Clear RAX register for syscall number (sys_write)
+    call printf                ; Call printf function
     jmp main
 
 call_ex7:
@@ -110,10 +132,17 @@ call_ex7:
 
 call_ex8:
     call ex8
+    mov rdi, format_int     ; Pass the format string for printing integer
+    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
+    call printf             ; Call printf function
     jmp main
 
 call_ex9:
     call ex9
+        ; Print the result
+    mov rdi, format_float
+    mov rax, 1
+    call printf
     jmp main
 
 call_ex10:

@@ -80,12 +80,8 @@ print_result:
 
     ; Print the converted integer
     mov rsi, [result]            ; Pass the integer to be printed
-    mov rdi, format_int     ; Pass the format string for printing integer
-    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
-    call printf             ; Call printf function
-
-    ; Exit
-ret
+   ; Exit
+    ret
 
 section .text
 extern printf

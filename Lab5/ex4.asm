@@ -29,13 +29,8 @@ ex4:
     mov rdi, input_buffer   ; Pass the address of input string
     call atoi1               ; Call the atoi1 function
 
-    ; Print the converted integer
-    mov rsi, rax            ; Pass the integer to be printed
-    mov rdi, format_int     ; Pass the format string for printing integer
-    xor rax, rax            ; Clear RAX register for syscall number (sys_write)
-    call printf             ; Call printf function
 
-ret
+    ret
 
 section .text
 extern printf

@@ -51,17 +51,6 @@ ex6:
     jnz .factorial_loop        ; Repeat until current number is zero
 
 mov rsi, rax               ; Pass the result to be printed
-mov rdi, format_int        ; Pass the format string for printing integer
-xor rax, rax               ; Clear RAX register for syscall number (sys_write)
-call printf                ; Call printf function
-
-    ; Print newline
-mov rax, 1
-mov rdi, 1
-mov rsi, nlinea
-mov rdx, lnlinea
-syscall
-
 ret
 
 section .text

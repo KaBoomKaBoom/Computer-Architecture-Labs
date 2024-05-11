@@ -14,7 +14,6 @@ section .data
     nlinea db 10, 0
     lnlinea equ $ - nlinea
 
-    format_float db "Result: %f", 10   ; Format string for printing floating point number
 
     two dq 2.0
 section .bss
@@ -70,14 +69,11 @@ ex9:
     movsd xmm0, [num1]
     addsd xmm0, [num2]      ; Add both numbers
     divsd xmm0, [two]       ; Divide by 2 to find the mean
-    movsd [result], xmm0    ; Store the result
 
-    ; Print the result
-    mov rdi, format_float
-    mov rax, 1
-    call printf
 
-ret
+
+
+    ret
 
 section .text
 extern printf
